@@ -1,0 +1,13 @@
+<body></body>
+    <h1>Add Country</h1>
+    <li><%= sendError %></li>
+    <form action="/addCountry" method="POST">
+        <label>Country Code</label>
+        <input type="text" name="code"><br>
+        <label>Country Name</label>
+        <input type="text" name="name"><br>
+        <label>Country Details</label>
+        <input type="text" name="details"><br>
+        <input type="submit" value="Add">
+    </form>
+</body>

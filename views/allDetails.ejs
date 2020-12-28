@@ -1,0 +1,17 @@
+<h1>All City Details</h3>
+
+
+        <% details.forEach((city) =>
+        { %>
+
+           City Code <input value=<%= city.cty_code %>></input><br>
+           City Name <input value=<%= city.cty_name %>></input><br>
+           City Population <input value=<%= city.population %>></input><br>
+           By the Sea<input value=<%= city.isCoastal %>></input><br>
+           Area (KM) <input value=<%= city.areaKM %>></input><br></br>
+           Country Code <input value=<%= city.co_code %>></input><br>
+           Country Name <input value=<%- JSON.stringify(city.co_name) %>></input><br>
+           
+        <% }) %>
+    
+<a href="/">Home</a>

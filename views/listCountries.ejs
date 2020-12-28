@@ -1,0 +1,21 @@
+<h1>Countries</h1>
+<input type="button" onclick="location.href='/addCountry'" value="Add Country" />
+<table border="1=" cellpadding="10">
+    <tr>
+        <th>Country Code</th>
+        <th>Country Name</th>
+        <th>Country Details</th>
+        <th>Action</th>
+    </tr>
+    <% countries.forEach((country) =>
+    { %>
+    <tr>
+        <td><%= country.co_code %></td>
+        <td><%= country.co_name %></td>
+        <td><%= country.co_details %></td>
+        <th><a href="/listCountries">Update</a></th>
+        <th><a href="/listCountries">Delete</a></th>
+    </tr>
+    <% }) %>
+</table>
+<th><a href="/">Home</a></th>
