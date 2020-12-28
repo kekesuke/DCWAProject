@@ -86,6 +86,21 @@ var editCountry = function (code, name, details) {
             })
     })
 }
+var deleteCountry = function (college_id) {
+    return new Promise((resolve, reject) => {
+        var myQuery = {
+            sql: 'delete from country where co_code = ?',
+            values: [college_id]
+        }
+        pool.query(myQuery)
+            .then((result) => {
+                resolve(result)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
 var getCities = function () {
     return new Promise((resolve, reject) => {
         pool.query('Select * from city')
@@ -180,4 +195,4 @@ var deleteCollege = function (college_id) {
             })
     })
 }
-module.exports = { getCountries, getCities, getDetails,getHeadsOfStates,addCountry, getCountry, editCountry, deleteCollege }
+module.exports = { getCountries, getCities, getDetails,getHeadsOfStates,addCountry, getCountry, editCountry, deleteCountry, deleteCollege }

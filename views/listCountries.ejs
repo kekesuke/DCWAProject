@@ -14,7 +14,7 @@
         <td><%= country.co_name %></td>
         <td><%= country.co_details %></td>
         <th><a href="/edit/<%= country.co_code%>">Update</a></th>
-        <th><a href="/listCountries">Delete</a></th>
+        <th><a href="/delete/<%= country.co_code%>">Delete</a></th>
     </tr>
     <% }) %>
 </table>

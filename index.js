@@ -127,6 +127,22 @@ app.get('/edit/:code', (req, res)=>{
         res.send(error)
     })
 })
+app.get('/delete/:code', (req, res)=>{
+    mySQLDAO.deleteCountry(req.params.code)
+    .then((result)=>{
+        res.send('<h1> Delete was succsesfull <br></br><br></br> '+ req.params.code +' has been deleted.</h1><br></br> <a href="/">Home</a>');
+ 
+        
+    })
+    .catch((error)=>{
+        if(error.errno == 1451){
+            res.send('<h1> Error Message<br></br><br></br> '+ req.params.code +' has cities, it cannot be deleted </h1><br></br> <a href="/">Home</a>');
+        }else{
+            res.send(error)
+        }
+       
+    })
+})
 
 app.post('/edit', (req, res)=>{
     console.log([JSON.parse(JSON.stringify(req.body))])
