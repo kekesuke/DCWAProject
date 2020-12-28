@@ -1,0 +1,19 @@
+<body>
+    <h1>Edit Country</h1>
+    <ul>
+        <li><%= sendError %></li>
+    </ul>
+    <form action="/edit" method="POST"> 
+        <% code.forEach((country) =>
+        { %>
+            <label>Country Code</label>
+            <input readonly name="co_code" value=<%= country.co_code %>></input><br>
+            <label>Country Name</label>
+            <input name="co_name" value=<%= country.co_name %>></input><br>
+            <label>Country Details</label>
+            <textarea rows="5" cols="65" name="co_details" max-width="300" ><%= country.co_details %></textarea><br>
+            <input type="submit" value="Update">       
+        <% }) %>
+    </form>
+    <a href="/">Home</a>
+</body>

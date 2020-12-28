@@ -1,13 +1,17 @@
-<body></body>
+<body>
     <h1>Add Country</h1>
-    <li><%= sendError %></li>
+    <ul>
+        <li><%= sendError %></li>
+        <li><%= sendErrortwo %></li>
+    </ul>
     <form action="/addCountry" method="POST">
         <label>Country Code</label>
         <input type="text" name="code"><br>
         <label>Country Name</label>
         <input type="text" name="name"><br>
         <label>Country Details</label>
-        <input type="text" name="details"><br>
+        <textarea rows="5" cols="65" name="details" max-width="300" ></textarea><br>
         <input type="submit" value="Add">
     </form>
+    <a href="/">Home</a>
 </body>

@@ -13,7 +13,7 @@
         <td><%= country.co_code %></td>
         <td><%= country.co_name %></td>
         <td><%= country.co_details %></td>
-        <th><a href="/listCountries">Update</a></th>
+        <th><a href="/edit/<%= country.co_code%>">Update</a></th>
         <th><a href="/listCountries">Delete</a></th>
     </tr>
     <% }) %>

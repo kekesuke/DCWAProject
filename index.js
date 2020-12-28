@@ -45,7 +45,7 @@ app.get('/allDetails/:details', (req, res)=>{
         if(result.length > 0){
             res.render('allDetails', {details:result})
         }else{
-            res.send("<h3> No such student with id: " +req.params.student +"</h3>")
+            //res.send("<h3> No such student with id: " +req.params.student +"</h3>")
         }
         
     })
@@ -81,13 +81,22 @@ app.get('/listHeadsOfState', (req, res)=>{
 })
 
 app.get('/addCountry', (req, res)=>{
-    res.render('addCountry', {sendError:  ''});
+    res.render('addCountry', {sendError:  '', sendErrortwo : ''});
 })
 
 app.post('/addCountry', (req, res)=>{
-    if(req.body.code > 3){
-        res.render()
+    //console.log(req.body.code)
+    sendErrortwo = ''
+    if(req.body.code.length  < 3 && req.body.name.length  < 3){
+        res.render('addCountry', {sendError: 'Error: Code must be 3 characters', sendErrortwo: 'Error: Name must be atleast 3 characters'});
     }
+    if(req.body.code.length < 3){
+        res.render('addCountry', {sendError: 'Error: Code must be 3 characters' });
+    }
+    if(req.body.name.length < 3 ){
+        res.render('addCountry', {sendError: 'Error: Name must be atleast 3 characters' });
+    } 
+    else{
     mySQLDAO.addCountry(req.body.code, req.body.name, req.body.details)
     .then((result)=>{
         res.redirect('/listCountries')
@@ -101,6 +110,44 @@ app.post('/addCountry', (req, res)=>{
         }
         
     })
+    }
+})
+
+app.get('/edit/:code', (req, res)=>{
+    mySQLDAO.getCountry(req.params.code)
+    .then((result)=>{
+        if(result.length > 0){
+            res.render('edit', {code:result, sendError: ''});
+        }else{
+            res.send("<h3> No such student with id: " +req.params.student +"</h3>")
+        }
+        
+    })
+    .catch((error)=>{
+        res.send(error)
+    })
+})
+
+app.post('/edit', (req, res)=>{
+    console.log([JSON.parse(JSON.stringify(req.body))])
+    if(req.body.co_name.length < 3  || req.body.co_name === null){
+        res.render('edit', {sendError: 'Error: Name must be atleast 3 characters', code: [JSON.parse(JSON.stringify(req.body))]});
+    } 
+    else{
+    mySQLDAO.editCountry(req.body.co_code, req.body.co_name, req.body.co_details)
+    .then((result)=>{
+        res.redirect('/listCountries')
+    })
+    .catch((error)=>{
+        if(error.errno = 1062){
+            res.render('edit', {sendError: 'Error: ' +req.body.code +' already exists' });
+        }else{
+            console.log(error)
+            res.send(error.message)
+        }
+        
+    })
+    }
 })
 
 app.get('/colleges/:college', (req, res)=>{
