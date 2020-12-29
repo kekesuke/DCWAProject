@@ -1,0 +1,15 @@
+<body>
+    <h1>Add Head of State</h1>
+    <ul>
+        <li><%= sendError %></li>
+        <li><%= sendErrortwo %></li>
+    </ul>
+    <form action="/addHeadOfState" method="POST">
+        <label>Country Code</label>
+        <input type="text" name="code"><br>
+        <label>Head of State</label>
+        <input type="text" name="head"><br>
+        <input type="submit" value="Add">
+    </form>
+    <a href="/">Home</a>
+</body>

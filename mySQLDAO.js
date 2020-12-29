@@ -4,7 +4,7 @@ const url = 'mongodb://localhost:27017'
 
 const dbName = 'headsOfStateDB'
 const collName = 'headsOfState'
-var pool     
+var pool
 var heeadsOfStateDB
 var headsOfState
 
@@ -24,25 +24,29 @@ mysql.createPool({
         console.log(error)
     });
 
-MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology:true})
-.then((client)=>{
-    heeadsOfStateDB = client.db(dbName)
-    headsOfState = heeadsOfStateDB.collection(collName)
-})
-.catch((error)=>{
-    console.log(error)
-})
+MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then((client) => {
+        heeadsOfStateDB = client.db(dbName)
+        headsOfState = heeadsOfStateDB.collection(collName)
+    })
+    .catch((error) => {
+        console.log(error)
+    })
 
-var getHeadsOfStates = function(){
-    return new Promise((resolve,reject)=>{
+var getHeadsOfStates = function () {
+    return new Promise((resolve, reject) => {
         var cursor = headsOfState.find()
-        cursor.toArray()
-        .then((documents)=>{
-            resolve(documents)
-        })
-        .catch((error)=>{
-            reject(error)
-        })
+        if (cursor.cursorState.cmd.find != 'headsOfStateDB.headsOfState') {
+            reject('Wrong DB/Collection')
+        } else {
+            cursor.toArray()
+                .then((documents) => {
+                    resolve(documents)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        }
     })
 
 }
@@ -60,8 +64,8 @@ var getCountries = function () {
 }
 
 var addCountry = function (code, name, details) {
-    return new Promise((resolve, reject) => { 
-        pool.query('Insert into country VALUES("' +code +'","' +name +'","' + details+'");')
+    return new Promise((resolve, reject) => {
+        pool.query('Insert into country VALUES("' + code.toUpperCase() + '","' + name + '","' + details + '");')
             .then((result) => {
                 resolve(result)
             })
@@ -71,10 +75,10 @@ var addCountry = function (code, name, details) {
     })
 }
 var editCountry = function (code, name, details) {
-    return new Promise((resolve, reject) => { 
+    return new Promise((resolve, reject) => {
         var queryOne = {
-            sql: 'UPDATE country set co_name="'+name +'", co_details="'+details +'" where co_code = ?',
-            values: [code]
+            sql: 'UPDATE country set co_name="' + name + '", co_details="' + details + '" where co_code = ?',
+            values: [code.toUpperCase()]
         }
 
         pool.query(queryOne)
@@ -126,7 +130,6 @@ var getDetails = function (details) {
             sql: 'Select * from country where co_code = ?',
             values: [details]
         }
-
         var store;
         pool.query(queryOne)
             .then((result) => {
@@ -164,35 +167,33 @@ var getCountry = function (country) {
     })
 }
 
-// var getStudent = function (student_id) {
-//     return new Promise((resolve, reject) => {
-//         var myQuery = {
-//             sql: 'Select * from student_table where student_id = ?',
-//             values: [student_id]
-//         }
-//         pool.query(myQuery)
-//             .then((result) => {
-//                 resolve(result)
-//             })
-//             .catch((error) => {
-//                 reject(error)
-//             })
-//     })
-// }
-
-var deleteCollege = function (college_id) {
+var addHeads = function (code, head) {
     return new Promise((resolve, reject) => {
-        var myQuery = {
-            sql: 'delete from college_table where college_id = ?',
-            values: [college_id]
+        var queryOne = {
+            sql: 'Select * from country where co_code = ?',
+            values: [code.toUpperCase()]
         }
-        pool.query(myQuery)
+
+        pool.query(queryOne)
             .then((result) => {
-                resolve(result)
+                if (result[0].co_code.toUpperCase() === code.toUpperCase()) {
+                    headsOfState.insertOne({ "_id": code.toUpperCase(), "headOfState": head })
+                        .then((documents) => {
+                            resolve(documents)
+                        })
+                        .catch((error) => {
+                            if (error.code == 11000) {
+                                reject('Cannot add Head of State to ' + code.toUpperCase() + ' as this country is is already in the collection')
+                            } else {
+                                reject(error)
+                            }
+                        })
+                }
             })
             .catch((error) => {
-                reject(error)
+                reject('Cannot add Head of State to ' + code.toUpperCase() + ' as this country is not in MySQL database')
             })
     })
 }
-module.exports = { getCountries, getCities, getDetails,getHeadsOfStates,addCountry, getCountry, editCountry, deleteCountry, deleteCollege }
+
+module.exports = { getCountries, getCities, getDetails, getHeadsOfStates, addCountry, getCountry, editCountry, deleteCountry, addHeads }
